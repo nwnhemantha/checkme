@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import './index.scss';
 import logo from '../../logo.svg'
 
 class MiddleSection extends Component {
