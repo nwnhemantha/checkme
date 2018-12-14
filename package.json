@@ -1,5 +1,5 @@
 {
-  "name": "checkme",
+  "name": "checkme-web",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -12,7 +12,6 @@
     "babel-plugin-named-asset-import": "^0.2.3",
     "babel-preset-react-app": "^6.1.0",
     "bfj": "6.1.1",
-    "bootstrap": "^4.1.3",
     "case-sensitive-paths-webpack-plugin": "2.1.2",
     "chalk": "2.4.1",
     "css-loader": "1.0.0",
@@ -44,8 +43,13 @@
     "react-app-polyfill": "^0.1.3",
     "react-dev-utils": "^6.1.1",
     "react-dom": "^16.6.3",
-    "reactstrap": "^6.5.0",
+    "react-redux": "^6.0.0",
+    "react-router-dom": "^4.3.1",
+    "react-router-redux": "^4.0.8",
+    "redux": "^4.0.1",
+    "redux-thunk": "^2.3.0",
     "resolve": "1.8.1",
+    "sass-loader": "7.1.0",
     "style-loader": "0.23.0",
     "terser-webpack-plugin": "1.1.0",
     "url-loader": "1.1.1",
@@ -116,6 +120,6 @@
   },
   "devDependencies": {
     "node-sass": "^4.11.0",
-    "sass-loader": "^7.1.0"
+    "redux-devtools-extension": "^2.13.7"
   }
 }
