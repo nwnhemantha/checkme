@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import App from './App';
-import App1 from './App1';
+import Header from './components/header';
 
 class Routes extends Component {
   render() {
     return (
       <div>
+        <Header />
         <Route exact path="/" component={App} />
-        <Route path="/test" component={App1} />
       </div>
     );
   }
