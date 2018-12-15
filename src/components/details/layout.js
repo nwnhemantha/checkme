@@ -4,7 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import './index.scss';
-
+import DetailsView from './details-view';
 
 const styles = theme => ({
   root: {
@@ -25,16 +25,13 @@ render(){
     return (
       <div className={classes.root} id="Details">
         <Grid container spacing={8}>
-          <Grid item xs={9}>
-            <Paper className={classes.paper}>
-            left
-            </Paper>
-          </Grid>
+          <Grid item xs={1} />
           <Grid item xs>
             <Paper className={classes.paper}>
-              right
+            <DetailsView/>
             </Paper>
           </Grid>
+          <Grid item xs={1} />
         </Grid>
       </div>
     );

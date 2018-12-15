@@ -3,6 +3,7 @@ import { Router, Route,Switch} from 'react-router-dom';
 import App from './App';
 import Header from './components/header';
 import Details from './components/details/layout';
+import NewPostStep from './components/new-post/step';
 import { history } from './index';
 
 class Routes extends Component {
@@ -14,6 +15,7 @@ class Routes extends Component {
             <Header  />
             <Route exact path="/" component={App} />
             <Route path="/details" component={Details} />
+            <Route path="/new-post" component={NewPostStep} />
           </div>
         </Router>
       </div>

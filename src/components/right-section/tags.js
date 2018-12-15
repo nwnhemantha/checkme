@@ -3,8 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Chip from '@material-ui/core/Chip';
-import DoneIcon from '@material-ui/icons/Done';
-import purple from '@material-ui/core/colors/purple';
+import SearchIcon from '@material-ui/icons/Search';
 import '../index.scss';
 
 const styles = theme => ({
@@ -45,7 +44,7 @@ class Chips extends React.Component {
                 label={data.label}
                 className={classes.chip}
                 color="primary"
-                deleteIcon={<DoneIcon />}
+                deleteIcon={<SearchIcon />}
                 onClick={() => null}
                 onDelete={() => null}
             />

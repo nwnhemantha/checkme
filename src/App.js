@@ -8,11 +8,17 @@ import Tags from './components/right-section/tags';
 import CategoryList from './components/left-section/category-list';
 import FeedList from './components/main-section/feedList';
 import Pagination from './components/main-section/pagination';
-
+import Button from '@material-ui/core/Button';
+import CreateIcon from '@material-ui/icons/Create';
+import {history} from './index';
 
 const styles = theme => ({
   root: {
     flexGrow: 1,
+  },
+  button: {
+    marginLeft: '60%;',
+    backgroundColor: '#0cd2d4'
   },
   paper: {
     padding: theme.spacing.unit * 2,
@@ -21,8 +27,15 @@ const styles = theme => ({
   },
 });
 
-function App(props) {
-  const { classes } = props;
+class App extends React.Component {
+
+  newPost = value => {
+    history.push('new-post');
+  }
+
+render() {
+
+  const { classes } = this.props;
 
   return (
     <div className={classes.root} id="App">
@@ -34,6 +47,9 @@ function App(props) {
         </Grid>
         <Grid item xs={7}>
           <Paper className={classes.paper}>
+          <Button variant="contained" color="primary" onClick={this.newPost} className={classes.button}>
+            <CreateIcon /> Add New Review or Question
+          </Button>
           <FeedList/>
           <Pagination />
           </Paper>
@@ -47,7 +63,7 @@ function App(props) {
     </div>
   );
 }
-
+}
 App.propTypes = {
   classes: PropTypes.object.isRequired,
 };

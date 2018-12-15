@@ -19,18 +19,16 @@ function ListDividers(props) {
   return (
     <List component="nav" className={classes.root}>
      <Divider />
-      <ListItem button>
+      <ListItem button divider>
         <ListItemText primary="Vehicles" />
       </ListItem>
-      <Divider />
       <ListItem button divider>
         <ListItemText primary="Electronics" />
       </ListItem>
-      <ListItem button>
+      <ListItem button divider>
         <ListItemText primary="Beauty Culture" />
       </ListItem>
-      <Divider light />
-      <ListItem button>
+      <ListItem button divider>
         <ListItemText primary="Sports" />
       </ListItem>
       <Divider />
