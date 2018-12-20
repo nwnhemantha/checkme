@@ -3,7 +3,7 @@ import { Router, Route,Switch} from 'react-router-dom';
 import App from './App';
 import Header from './components/header';
 import Details from './components/details/layout';
-import NewPostStep from './components/new-post/step';
+import NewPostStep from './components/new-post/check-login';
 import { history } from './index';
 
 class Routes extends Component {
