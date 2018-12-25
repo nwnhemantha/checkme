@@ -15,6 +15,7 @@ const styles = theme => ({
 });
 
 function ListDividers(props) {
+  
   const { classes } = props;
   return (
     <List component="nav" className={classes.root}>
@@ -32,6 +33,11 @@ function ListDividers(props) {
         <ListItemText primary="Sports" />
       </ListItem>
       <Divider />
+
+      <div>
+        <br />
+        <div id="histats_counter"></div>
+      </div>
     </List>
   );
 }

@@ -8,7 +8,11 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import moment from 'moment';
 import Step from './step';
+import SecurityIcon from '@material-ui/icons/Security';
+import { connect } from 'react-redux';
+
 import { history } from '../../index';
+import { signIn } from '../../modules/user';
 
 const styles = theme => ({
     root: {
@@ -28,21 +32,15 @@ const styles = theme => ({
 
     divider: {
         margin: "20px 0px"
+    },
+    warning: {
+        color: 'orange'
     }
   });
 
 
-const responseFacebook = (response) => {
-    console.log('+++++++++++++++',response);
-}
 
-const componentClicked = (response) => {
-    console.log('==================',response);
-}
 
-const responseGoogle = (response) => {
-    console.log(response);
-}
 
 class CheckLogin extends Component {
     constructor(props){
@@ -52,8 +50,38 @@ class CheckLogin extends Component {
         }
     }
 
+    responseGoogle = (response) => {
+        const data = {
+            userData: {
+                    email:response.w3.U3,
+                    login_type:2,
+                    name: response.w3.ig,
+                    picture: response.w3.Paa,
+            }
+        }
+        this.props.signIn(data);
+    }
+
+    responseFacebook = (response) => {
+         
+        const data = {
+            userData: {
+                    email:response.email,
+                    login_type:1,
+                    name: response.name,
+                    picture: response.picture.data.url
+            }
+        }
+        this.props.signIn(data);
+
+    }
+
     next = () => {
        this.setState({islogged: true});
+    }
+
+    goPrivacyPage = () => {
+        history.push('privacy')
     }
 
     render() {
@@ -65,21 +93,28 @@ class CheckLogin extends Component {
             )
         }
 
+
+        console.log(')))))))))))))))))',this.props);
     return (
       <div style={{marginTop: '80px', marginLeft: '80px'}}>
       <Paper className={classes.root} elevation={1}>
       <FacebookLogin
-            appId="1088597931155576"
-            onClick={componentClicked}
-            callback={responseFacebook} />
+            appId="208836120062087"
+            fields="name,email,picture"
+            callback={this.responseFacebook} />
         <br />
         <GoogleLogin
-            clientId="658977310896-knrl3gka66fldh83dao2rhgbblmd4un9.apps.googleusercontent.com"
+            clientId="778699611723-ioeo1poist5anu9spbaumlrh1fa0ejlu.apps.googleusercontent.com"
             buttonText="LOGIN WITH GOOGLE"
-            onSuccess={responseGoogle}
+            onSuccess={this.responseGoogle}
             className={classes.google}
-            onFailure={responseGoogle}
+            onFailure={this.responseGoogle}
             />
+            <br />
+            <br />
+            <Button color="primary" small onClick={this.goPrivacyPage}>
+                Privacy Policy <SecurityIcon className={classes.warning}/>
+            </Button>
         <Divider component="div" className={classes.divider}/>
 
         <div>
@@ -99,4 +134,12 @@ class CheckLogin extends Component {
   }
 }
 
-export default withStyles(styles)(CheckLogin);
+const mapStateToProps = state => ({
+    ...state
+})
+
+const mapDispatchToProps = {
+    signIn
+}
+
+export default connect(mapStateToProps, mapDispatchToProps) (withStyles(styles)(CheckLogin));

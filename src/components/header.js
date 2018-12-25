@@ -17,6 +17,9 @@ import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import { history } from '../index';
+import { connect } from 'react-redux';
+import Avatar from '@material-ui/core/Avatar';
+import { logout } from '../modules/user';
 
 const styles = theme => ({
   root: {
@@ -93,7 +96,31 @@ class Header extends React.Component {
   state = {
     anchorEl: null,
     mobileMoreAnchorEl: null,
+    isLogged: false,
+    avatar: null
   };
+
+  componentDidMount(){
+
+    console.log('header  called');
+    if(localStorage.getItem("loggedUser")){
+      let user = JSON.parse(localStorage.getItem("loggedUser"));
+      this.setState({avatar: user.picture, isLogged: true})
+    }
+  
+  }
+
+  componentWillReceiveProps(np){
+    console.log('np++++++++++++++', np)
+
+      if(np.user.loggedIn){
+        let user = JSON.parse(localStorage.getItem("loggedUser"));
+      this.setState({avatar: user.picture})
+    }
+
+    this.setState({isLogged: np.user.loggedIn})
+    
+  }
 
   handleProfileMenuOpen = event => {
     this.setState({ anchorEl: event.currentTarget });
@@ -115,6 +142,13 @@ class Header extends React.Component {
   redirecHome(){
     history.push('/');
   }
+
+  logout = () => {
+    localStorage.removeItem('loggedUser');
+    this.props.logout();
+    history.push('/');
+  }
+
   render() {
     const { anchorEl, mobileMoreAnchorEl } = this.state;
     const { classes } = this.props;
@@ -129,8 +163,7 @@ class Header extends React.Component {
         open={isMenuOpen}
         onClose={this.handleMenuClose}
       >
-        <MenuItem onClick={this.handleMenuClose}>Profile</MenuItem>
-        <MenuItem onClick={this.handleMenuClose}>My account</MenuItem>
+        <MenuItem onClick={this.logout}>Log out</MenuItem>
       </Menu>
     );
 
@@ -188,7 +221,7 @@ class Header extends React.Component {
             </div>
             <div className={classes.grow} />
             <div className={classes.sectionDesktop}>
-              <IconButton color="inherit">
+              {/* <IconButton color="inherit">
                 <Badge badgeContent={4} color="secondary">
                   <MailIcon />
                 </Badge>
@@ -197,14 +230,19 @@ class Header extends React.Component {
                 <Badge badgeContent={17} color="secondary">
                   <NotificationsIcon />
                 </Badge>
-              </IconButton>
+              </IconButton> */}
               <IconButton
                 aria-owns={isMenuOpen ? 'material-appbar' : undefined}
                 aria-haspopup="true"
                 onClick={this.handleProfileMenuOpen}
                 color="inherit"
               >
-                <AccountCircle />
+                {
+                  !this.state.isLogged && <AccountCircle />
+                }
+                {  this.state.isLogged &&
+                  <Avatar alt="Remy Sharp" src={this.state.avatar} />
+                }
               </IconButton>
             </div>
             <div className={classes.sectionMobile}>
@@ -214,8 +252,8 @@ class Header extends React.Component {
             </div>
           </Toolbar>
         </AppBar>
-        {renderMenu}
-        {renderMobileMenu}
+        { this.state.isLogged && renderMenu}
+        { renderMobileMenu}
       </div>
     );
   }
@@ -225,4 +263,14 @@ Header.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(Header);
+
+const mapStateToProps = state => ({
+  ...state
+})
+
+const mapDispatchToProps = {
+  logout
+}
+
+
+export default connect(mapStateToProps, mapDispatchToProps) (withStyles(styles)(Header));
