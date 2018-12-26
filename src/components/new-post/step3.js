@@ -48,14 +48,18 @@ class Tags extends React.Component {
     this.setState({
       tags: [...tags, tag],
       value: ""
+    }, () => {
+      this.props.onStep3Change(this.state.tags);
     });
+
+   
   }
 
   editPrevTag() {
     let { tags } = this.state;
 
     const tag = tags.pop();
-
+    this.props.onStep3Change(tags);
     this.setState({ tags, value: tag });
   }
 

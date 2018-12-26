@@ -13,7 +13,12 @@ import Step1 from './step1';
 import Step2 from './step2';
 import Step3 from './step3';
 import Grid from '@material-ui/core/Grid';
-
+import { connect } from 'react-redux';
+import { fetchCategories } from '../../modules/category';
+import { createPost } from '../../modules/post';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import {history} from '../../index';
 
 const styles = theme => ({
   root: {
@@ -21,7 +26,7 @@ const styles = theme => ({
   },
   button: {
     marginTop: theme.spacing.unit,
-    marginRight: theme.spacing.unit,
+    marginRight: theme.spacing.unit
   },
   actionsContainer: {
     marginBottom: theme.spacing.unit * 2,
@@ -35,25 +40,55 @@ function getSteps() {
   return ['Select a category', 'Create a review or question', 'Create tags'];
 }
 
-function getStepContent(step) {
-  switch (step) {
-    case 0:
-      return <Step1 />;
-    case 1:
-      return <Step2 />;
-    case 2:
-      return <Step3 />;
-    default:
-      return 'Unknown step';
-  }
-}
 
 class NewPostStep extends React.Component {
   state = {
     activeStep: 0,
+    categories: [],
+    post: null
   };
 
+  componentDidMount(){
+    this.props.fetchCategories();
+  }
+
+  componentWillReceiveProps(np){
+    this.setState({categories: np.category.categories})
+  }
+
   handleNext = () => {
+    const {activeStep, post} = this.state;
+    switch (activeStep) {
+      case 0:
+      if(!post || (post.category_id == "")) {
+        toast.error("Please select a category");
+        return false
+      }
+        break;
+      
+      case 1:
+      if((!post.details || post.details == "")) {
+        toast.error("Please type details");
+        return false
+      }
+        break;
+
+      case 2:
+      if((!post.tags || post.tags.length < 3)) {
+        toast.error("You need to provide minimum 3 tags");
+        return false
+      }
+      const data = {
+        postData: post
+      }
+      this.props.createPost(data)
+        break;
+
+      default:
+        break;
+    }
+
+    console.log(activeStep)
     this.setState(state => ({
       activeStep: state.activeStep + 1,
     }));
@@ -66,10 +101,45 @@ class NewPostStep extends React.Component {
   };
 
   handleReset = () => {
-    this.setState({
-      activeStep: 0,
-    });
+    history.push('/')
   };
+  
+  onStep1Change = value => {
+    const { post} = this.state;
+    let user = JSON.parse(localStorage.getItem("loggedUser"));
+    let user_id = null;
+    if(user) {
+      user_id = user.id;
+    }else {
+      user_id = null
+    }
+    this.setState({post: { ...post ,"category_id": value, user_id}});
+  }
+  
+  onStep2Change = value => {
+    const { post} = this.state;
+    this.setState({post: { ...post ,"details": value}});
+  }
+  
+  
+  onStep3Change = value => {
+    const { post} = this.state;
+    this.setState({post: { ...post ,"tags": value}});
+  }
+  
+
+  getStepContent(step) {
+    switch (step) {
+      case 0:
+        return <Step1 categories={this.state.categories} onStep1Change={this.onStep1Change}/>;
+      case 1:
+        return <Step2 onStep2Change={this.onStep2Change}/>;
+      case 2:
+        return <Step3 onStep3Change={this.onStep3Change}/>;
+      default:
+        return 'Unknown step';
+    }
+  }
 
   render() {
     const { classes } = this.props;
@@ -78,6 +148,7 @@ class NewPostStep extends React.Component {
 
     return (
       <div className={classes.root} id="new-post-steps">
+      <ToastContainer/>
        <Grid container spacing={8}>
         <Grid item xs={1} />
         <Grid item xs>
@@ -88,7 +159,7 @@ class NewPostStep extends React.Component {
               <Step key={label}>
                 <StepLabel>{label}</StepLabel>
                 <StepContent>
-                  <Typography>{getStepContent(index)}</Typography>
+                  <Typography>{this.getStepContent(index)}</Typography>
                   <div className={classes.actionsContainer}>
                     <div>
                       <Button
@@ -116,8 +187,8 @@ class NewPostStep extends React.Component {
         {activeStep === steps.length && (
           <Paper square elevation={0} className={classes.resetContainer}>
             <Typography>All steps completed - you&apos;re finished</Typography>
-            <Button onClick={this.handleReset} className={classes.button}>
-              Reset
+            <Button variant="contained" onClick={this.handleReset}  color="primary" className={classes.button}>
+              Back to Home
             </Button>
           </Paper>
         )}
@@ -134,4 +205,14 @@ NewPostStep.propTypes = {
   classes: PropTypes.object,
 };
 
-export default withStyles(styles)(NewPostStep);
+const mapStateToProps = state => ({
+  ...state
+})
+
+const mapDispatchToProps = {
+  fetchCategories,
+  createPost
+}
+
+
+export default connect(mapStateToProps, mapDispatchToProps) (withStyles(styles)(NewPostStep));

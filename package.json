@@ -54,6 +54,7 @@
     "react-router-dom": "^4.3.1",
     "react-router-redux": "^4.0.8",
     "react-tag-box": "^1.6.0",
+    "react-toastify": "^4.5.1",
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",
     "resolve": "1.8.1",

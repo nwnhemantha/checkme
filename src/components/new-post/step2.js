@@ -16,6 +16,15 @@ const styles = theme => ({
 
 class PostInput extends Component {
   
+  constructor(props){
+    super(props);
+    this.state = {}
+  }
+
+  onChange = event => {
+    this.props.onStep2Change(event.target.value);
+  }
+
   render() {
     const { classes } = this.props;
     return (
@@ -28,6 +37,7 @@ class PostInput extends Component {
           className={classes.textField}
           margin="normal"
           variant="outlined"
+          onChange={this.onChange}
         />
       </div>
     );

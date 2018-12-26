@@ -47,8 +47,10 @@ export const signIn = (data) => dispatch =>  {
         'content-type': 'application/json'
       },
       body: JSON.stringify(data)
+    }).then(function(response) {
+      return response.json()
     }).then( res => {
-      localStorage.setItem("loggedUser", JSON.stringify(data.userData));
+      localStorage.setItem("loggedUser", JSON.stringify(res.data));
       return dispatch ({
         type: SIGNIN_SUCCESS,
         payload: res  

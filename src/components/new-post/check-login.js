@@ -46,7 +46,24 @@ class CheckLogin extends Component {
     constructor(props){
         super(props);
         this.state = {
-            islogged: false
+            isLogged: false
+        }
+    }
+
+    componentDidMount(){
+        
+        let user = JSON.parse(localStorage.getItem("loggedUser"));
+
+        if(user) {
+            this.setState({ isLogged: true})
+        }
+        
+    }
+
+    componentWillReceiveProps(np){
+
+        if(np.user.loggedIn){
+            this.setState({isLogged:true})
         }
     }
 
@@ -77,7 +94,7 @@ class CheckLogin extends Component {
     }
 
     next = () => {
-       this.setState({islogged: true});
+       this.setState({isLogged: true});
     }
 
     goPrivacyPage = () => {
@@ -86,15 +103,13 @@ class CheckLogin extends Component {
 
     render() {
         const { classes } = this.props;
-    
-        if(this.state.islogged){
+        if(this.state.isLogged){
             return (
                 <Step />
             )
         }
 
 
-        console.log(')))))))))))))))))',this.props);
     return (
       <div style={{marginTop: '80px', marginLeft: '80px'}}>
       <Paper className={classes.root} elevation={1}>

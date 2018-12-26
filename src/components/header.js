@@ -101,8 +101,6 @@ class Header extends React.Component {
   };
 
   componentDidMount(){
-
-    console.log('header  called');
     if(localStorage.getItem("loggedUser")){
       let user = JSON.parse(localStorage.getItem("loggedUser"));
       this.setState({avatar: user.picture, isLogged: true})
@@ -111,14 +109,13 @@ class Header extends React.Component {
   }
 
   componentWillReceiveProps(np){
-    console.log('np++++++++++++++', np)
-
-      if(np.user.loggedIn){
-        let user = JSON.parse(localStorage.getItem("loggedUser"));
-      this.setState({avatar: user.picture})
+    let user = JSON.parse(localStorage.getItem("loggedUser"));
+      if(user){
+      this.setState({avatar: user.picture, isLogged: true})
+    }else {
+      this.setState({isLogged: false})
     }
 
-    this.setState({isLogged: np.user.loggedIn})
     
   }
 
@@ -145,6 +142,7 @@ class Header extends React.Component {
 
   logout = () => {
     localStorage.removeItem('loggedUser');
+    this.setState({anchorEl: null});
     this.props.logout();
     history.push('/');
   }
@@ -252,7 +250,7 @@ class Header extends React.Component {
             </div>
           </Toolbar>
         </AppBar>
-        { this.state.isLogged && renderMenu}
+        { renderMenu}
         { renderMobileMenu}
       </div>
     );
