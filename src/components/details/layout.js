@@ -18,6 +18,13 @@ const styles = theme => ({
 });
 
 class Details extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      post: null
+    }
+  }
+
 
 render(){
     const { classes } = this.props;
@@ -28,7 +35,7 @@ render(){
           <Grid item xs={1} />
           <Grid item xs>
             <Paper className={classes.paper}>
-            <DetailsView/>
+            <DetailsView postId={this.props.match.params.id}/>
             </Paper>
           </Grid>
           <Grid item xs={1} />

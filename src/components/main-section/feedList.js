@@ -39,8 +39,9 @@ class FeedList extends React.Component {
       rowsPerPage: 10
     }
   }
-  onClick = valuse => {
-    history.push('/details')
+  onClick = post => {
+    console.log(post)
+    history.push(`/details/${post.id}/${post.title}`);
   }
 
   componentDidMount(){
@@ -92,7 +93,7 @@ class FeedList extends React.Component {
         }
 
         return (
-          <ListItem alignItems="flex-start" button onClick={this.onClick}>
+          <ListItem alignItems="flex-start" button onClick={this.onClick.bind(this,item)}>
           <ListItemAvatar>
             <Avatar alt="Remy Sharp" src={image} />
           </ListItemAvatar>

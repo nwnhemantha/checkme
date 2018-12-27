@@ -3,6 +3,8 @@ const NEW_POST = "NEW_POST";
 const NEW_POST_ERROR = "NEW_POST_ERROR";
 const POSTS_FETCH = "POSTS_FETCH";
 const POSTS_FETCH_FAILED = "POSTS_FETCH_FAILED";
+const POST_FETCH = "POST_FETCH";
+const POST_FETCH_FAILED = "POST_FETCH_FAILED";
 
 
 const initialState = {
@@ -36,6 +38,20 @@ export default function category(state = initialState, action = {}) {
       return {
           ...state,
           posts: []
+      }
+      break;
+
+      case POST_FETCH:
+      return {
+          ...state,
+          postDetails: action.payload
+      }
+      break;
+
+      case POST_FETCH_FAILED:
+      return {
+          ...state,
+          postDetails: []
       }
       break;
 
@@ -80,6 +96,22 @@ export const fetchPosts = (limit = 4, offset = 0) => dispatch =>  {
   }).catch( error => {
     return dispatch ({
       type: POSTS_FETCH_FAILED
+    })
+  })
+
+}
+
+export const fetchPostDetails = (id) => dispatch =>  {
+  fetch("http://localhost:3001/post/"+id).then(function(response) {
+      return response.json()
+    }).then( res => {
+      return dispatch ({
+      type: POST_FETCH,
+      payload: res.data
+    })
+  }).catch( error => {
+    return dispatch ({
+      type: POST_FETCH_FAILED
     })
   })
 

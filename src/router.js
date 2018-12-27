@@ -15,7 +15,7 @@ class Routes extends Component {
           <div>
             <Header  />
             <Route exact path="/" component={App} />
-            <Route path="/details" component={Details} />
+            <Route path="/details/:id/:title" component={Details} />
             <Route path="/new-post" component={NewPostStep} />
             <Route path="/privacy" component={Privacy} />
           </div>

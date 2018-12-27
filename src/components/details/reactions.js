@@ -32,9 +32,9 @@ class Reactions extends React.Component {
         showLabels
         className={classes.root}
       >
-        <BottomNavigationAction label="10" icon={<CommentIcon />} />
-        <BottomNavigationAction label="100" icon={<ThumbUpIcon />} />
-        <BottomNavigationAction label="5" icon={<ShareIcon />} />
+        <BottomNavigationAction label={this.props.post.commentCount} icon={<CommentIcon />} />
+        <BottomNavigationAction label={this.props.post.likeCount} icon={<ThumbUpIcon />} />
+        <BottomNavigationAction label={this.props.post.shareCount} icon={<ShareIcon />} />
       </BottomNavigation>
     );
   }

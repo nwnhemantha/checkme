@@ -13,6 +13,9 @@ import Comments from './comments';
 import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
 import CreateIcon from '@material-ui/icons/ArrowBack';
+import { connect } from 'react-redux';
+import { fetchPostDetails } from '../../modules/post';
+import moment from 'moment';
 
 const styles = theme => ({
   root: {
@@ -25,13 +28,27 @@ const styles = theme => ({
   },
   inline: {
     display: 'inline',
+    color: 'darkorchid'
   },
+  duration: {
+    color: "#0067bc"
+  }
 });
 
 class detailsView extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      post: null
+    }
+  }
 
-  onClick = valuse => {
-    history.push('/details')
+  componentDidMount(){
+    this.props.fetchPostDetails(this.props.postId)
+  }
+
+  componentWillReceiveProps(np){
+    this.setState({ post: np.posts.postDetails})
   }
 
   goBack = valuse => {
@@ -41,6 +58,27 @@ class detailsView extends React.Component {
   render() {
 
     const { classes } = this.props;
+    const { post } = this.state;
+
+    console.log(post);
+
+    if(!post) {
+      return (
+        <Typography component="span" className={classes.inline} color="textPrimary">
+            loading...
+          </Typography>
+      )
+    }
+
+    let user = null;
+    let image = null;
+    if(post.User){
+      user = post.User.name
+      image = post.User.picture
+    } else {
+      user = `User_${ moment(post.created_at).unix() }`
+    }
+
 
     return (
       <div>
@@ -48,29 +86,25 @@ class detailsView extends React.Component {
           <CreateIcon /> go back
       </Button>
       <List className={classes.root}>
-        <ListItem alignItems="flex-start" button onClick={this.onClick}>
+        <ListItem alignItems="flex-start">
           <ListItemAvatar>
-            <Avatar alt="Remy Sharp" src="http://vms.fnal.gov/stillphotos/2018/0000/18-0090-10.jpg" />
+            <Avatar alt="Remy Sharp" src={image} />
           </ListItemAvatar>
           <ListItemText
             primary="Hope to buy a new panda car"
             secondary={
               <React.Fragment>
                 <Typography component="span" className={classes.inline} color="textPrimary">
-                  2018-05-25
+                { user } -  <span className={classes.duration}> { moment.duration(-moment().diff(moment(post.created_at), 'minutes'), "minutes").humanize(true) } </span>
                 </Typography>
-                {` Where does it come from?
-Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.
-
-
-The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.`}
+                <div>{` ${post.details}`} </div>
               </React.Fragment>
             }
           />
         </ListItem>
       </List>
       <Divider light/>
-      <Reactions />
+      <Reactions post={post}/>
       <Divider light/>
       <Comments/>
       </div>
@@ -81,4 +115,12 @@ detailsView.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(detailsView);
+const mapStateToProps = state => ({
+  ...state
+})
+
+const mapDispatchToProps = {
+  fetchPostDetails
+}
+
+export default connect(mapStateToProps, mapDispatchToProps) (withStyles(styles)(detailsView));
