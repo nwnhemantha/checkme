@@ -7,8 +7,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
-import { history } from '../../index';
-import Reactions from './reactions';
+import moment from 'moment';
 
 const styles = theme => ({
   root: {
@@ -17,15 +16,64 @@ const styles = theme => ({
   },
   inline: {
     display: 'inline',
+    color: 'darkorchid'
   },
+  duration: {
+    color: "#0067bc"
+  }
 });
 
 class Comments extends React.Component {
-
-  onClick = valuse => {
-    console.log('clicked')
-    history.push('/details')
+  constructor(props){
+    super(props)
+    this.state = {
+      comments: []
+    }
   }
+  
+  componentDidMount(){
+    this.setState({ comments: this.props.comments})
+  }
+  
+  loadComments = () => {
+    const {comments} = this.state;
+    const { classes } = this.props;
+    
+    console.log('comments', comments)
+    if (comments) {
+      return comments.map( (comment) => {
+        let user = null;
+        let image = null;
+        if(comment.User){
+          user = comment.User.name
+          image = comment.User.picture
+        } else {
+          user = `User_${ moment(comment.created_at).unix() }`
+        }
+
+          return (
+            <ListItem alignItems="flex-start">
+            <ListItemAvatar>
+              <Avatar alt="Remy Sharp" src={image} />
+            </ListItemAvatar>
+            <ListItemText
+              secondary={
+                <React.Fragment>
+                  <Typography component="span" className={classes.inline} color="textPrimary">
+                  { user } -  <span className={classes.duration}> { moment.duration(-moment().diff(moment(comment.created_at), 'minutes'), "minutes").humanize(true) } </span>
+                  </Typography>
+                  <div>{` ${comment.comment}`} </div>
+                </React.Fragment>
+              }
+            />
+          </ListItem>
+          )
+          
+          } )
+      }
+  }
+
+
   render() {
 
     const { classes } = this.props;
@@ -38,38 +86,7 @@ class Comments extends React.Component {
       </h3>
 
       <List className={classes.root}>
-        <ListItem alignItems="flex-start" button onClick={this.onClick}>
-          <ListItemAvatar>
-            <Avatar alt="Remy Sharp" src="http://vms.fnal.gov/stillphotos/2018/0000/18-0090-10.jpg" />
-          </ListItemAvatar>
-          <ListItemText
-            primary="Hope to buy a new panda car"
-            secondary={
-              <React.Fragment>
-                <Typography component="span" className={classes.inline} color="textPrimary">
-                  kathy
-                </Typography>
-                {` Wherefrom "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.`}
-              </React.Fragment>
-            }
-          />
-        </ListItem>
-        <ListItem alignItems="flex-start" button onClick={this.onClick}>
-          <ListItemAvatar>
-            <Avatar alt="Remy Sharp" src="http://vms.fnal.gov/stillphotos/2018/0000/18-0090-10.jpg" />
-          </ListItemAvatar>
-          <ListItemText
-            primary="Hope to buy a new panda car"
-            secondary={
-              <React.Fragment>
-                <Typography component="span" className={classes.inline} color="textPrimary">
-                  kathy
-                </Typography>
-                {` Wherefrom "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.`}
-              </React.Fragment>
-            }
-          />
-        </ListItem>
+        { this.loadComments()}
       </List>
       </div>
     );

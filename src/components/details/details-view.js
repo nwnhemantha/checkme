@@ -16,6 +16,7 @@ import CreateIcon from '@material-ui/icons/ArrowBack';
 import { connect } from 'react-redux';
 import { fetchPostDetails } from '../../modules/post';
 import moment from 'moment';
+import TextareaAutosize from 'react-autosize-textarea';
 
 const styles = theme => ({
   root: {
@@ -32,6 +33,11 @@ const styles = theme => ({
   },
   duration: {
     color: "#0067bc"
+  },
+  details: {
+    width: "100%",
+    border: "none",
+    paddingTop: "15px"
   }
 });
 
@@ -91,13 +97,16 @@ class detailsView extends React.Component {
             <Avatar alt="Remy Sharp" src={image} />
           </ListItemAvatar>
           <ListItemText
-            primary="Hope to buy a new panda car"
+            primary={post.title}
             secondary={
               <React.Fragment>
                 <Typography component="span" className={classes.inline} color="textPrimary">
                 { user } -  <span className={classes.duration}> { moment.duration(-moment().diff(moment(post.created_at), 'minutes'), "minutes").humanize(true) } </span>
                 </Typography>
-                <div>{` ${post.details}`} </div>
+                <TextareaAutosize
+                    className={classes.details}
+                    placeholder={post.details}
+                  />
               </React.Fragment>
             }
           />
@@ -106,7 +115,7 @@ class detailsView extends React.Component {
       <Divider light/>
       <Reactions post={post}/>
       <Divider light/>
-      <Comments/>
+      <Comments comments={post.comments}/>
       </div>
     );
   }
