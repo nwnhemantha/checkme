@@ -8,6 +8,10 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
 import { history } from '../../index';
+import { connect } from 'react-redux';
+import { fetchPosts } from '../../modules/post';
+import moment from 'moment';
+import Pagination from './pagination';
 
 const styles = theme => ({
   root: {
@@ -16,69 +20,114 @@ const styles = theme => ({
   },
   inline: {
     display: 'inline',
+    color: 'darkorchid'
   },
+  duration: {
+    color: "#0067bc"
+  }
 });
 
 class FeedList extends React.Component {
-
+  constructor(props){
+    super(props);
+    this.state = {
+      posts: [],
+      postCount:0,
+      limit: 10,
+      offset: 0,
+      page: 0,
+      rowsPerPage: 10
+    }
+  }
   onClick = valuse => {
-    console.log('clicked')
     history.push('/details')
   }
+
+  componentDidMount(){
+    const { limit, offset} = this.state;
+
+    this.props.fetchPosts(limit, offset);
+  }
+
+  componentWillReceiveProps(np){
+    
+    if(np.posts){
+       this.setState({ posts: np.posts.posts.post, postCount: np.posts.posts.postCount})
+    }
+   
+  }
+
+  onChangePage = (e, selected) => {
+    const { limit, offset, page} = this.state;
+    this.setState((prevState, props) => {
+      if(page < selected){
+        ++prevState.page;
+        prevState.offset = prevState.offset + prevState.limit;
+      } else {
+        --prevState.page;
+        prevState.offset = prevState.offset - prevState.limit 
+      }
+
+      return {page: prevState.page, offset: prevState.offset };
+    }, () => this.props.fetchPosts(limit, this.state.offset))
+
+    console.log(page, selected)
+  }
+
+  onChangeRowsPerPage = () => {
+    console.log('onChangeRowsPerPage')
+  }
+
+  loadPosts = () => {
+    const { classes } = this.props;
+    if(this.state.posts){
+      return this.state.posts.map((item, key) => {
+        let user = null;
+        let image = null;
+        if(item.User){
+          user = item.User.name
+          image = item.User.picture
+        } else {
+          user = `User_${ moment(item.created_at).unix() }`
+        }
+
+        return (
+          <ListItem alignItems="flex-start" button onClick={this.onClick}>
+          <ListItemAvatar>
+            <Avatar alt="Remy Sharp" src={image} />
+          </ListItemAvatar>
+          <ListItemText
+            primary={item.title}
+            secondary={
+              <React.Fragment classN>
+                <Typography component="span" className={classes.inline} color="textPrimary">
+                { user } -  <span className={classes.duration}> { moment.duration(-moment().diff(moment(item.created_at), 'minutes'), "minutes").humanize(true) } </span>
+                </Typography>
+                <div className="block-with-text">{` ${item.details.substring(0, 250)}`} </div>
+              </React.Fragment>
+            }
+          />
+        </ListItem>
+        )
+      })
+    }
+  }
+
   render() {
 
     const { classes } = this.props;
+    const { postCount, rowsPerPage, page } = this.state;
 
     return (
       <List className={classes.root}>
-        <ListItem alignItems="flex-start" button onClick={this.onClick}>
-          <ListItemAvatar>
-            <Avatar alt="Remy Sharp" src="http://vms.fnal.gov/stillphotos/2018/0000/18-0090-10.jpg" />
-          </ListItemAvatar>
-          <ListItemText
-            primary="Hope to buy a new panda car"
-            secondary={
-              <React.Fragment>
-                <Typography component="span" className={classes.inline} color="textPrimary">
-                  Ali Connors
-                </Typography>
-                {" - I am planning to buy a Micro Panda, a recenetly registered vehicle,please let me know the usage of the vehicle in fuel consumption and other spares.what could be the average price of a recently registered vehicle."}
-              </React.Fragment>
-            }
+        { this.loadPosts() }
+        <Pagination 
+          count={postCount}
+          rowsPerPage={rowsPerPage}
+          page={page} 
+          onChangeRowsPerPage={this.onChangeRowsPerPage}
+          onChangePage={this.onChangePage}
           />
-        </ListItem>
-        <ListItem alignItems="flex-start" button>
-          <ListItemAvatar>
-            <Avatar alt="Remy Sharp" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQZLnvzlioOvMfplscPR5-EJT_VvN4Enw6QI1UaGBOXrQKmhxn5_w" />
-          </ListItemAvatar>
-          <ListItemText
-            primary="Recommended Fuel for Axio hybrid 2017"
-            secondary={
-              <React.Fragment>
-                <Typography component="span" className={classes.inline} color="textPrimary">
-                  to Scott, Alex, Jennifer
-                </Typography>
-                {" — In the near future I would like to buy scooteryamaha  fascino in the standard configuration. I liked this model appearance and the manufacturer is reliable. I think it would be comfortable to ride around town on this scooter. Tell me am I making a good choice? ..."}
-              </React.Fragment>
-            }
-          />
-        </ListItem>
-        <ListItem alignItems="flex-start" button>
-          <ListItemAvatar>
-            <Avatar alt="Remy Sharp" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR636ftCrTx63veKHKYGL5KzocPaiXr9N9SDgqR1gI3BsiuATmCig" />
-          </ListItemAvatar>
-          <ListItemText
-            primary="Yamaha  Tzr125"
-            secondary={
-              <React.Fragment>
-                <Typography component="span" className={classes.inline} color="textPrimary">
-                  Sandra Adams
-                </Typography>
-                {" — Hey guys, a friend of mine has been shopping around for a TZR125 for some time and through google and whatnot we found that most of the bikes in SL are from the 90's. Has anyone owned this particular bike and knows the problems etc that he should expect? He is a bit apprehensive because it is an old..."}
-              </React.Fragment>
-            }
-          />
-        </ListItem>
       </List>
     );
   }
@@ -87,4 +136,12 @@ FeedList.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(FeedList);
+const mapStateToProps = state => ({
+  ...state
+})
+
+const mapDispatchToProps = {
+  fetchPosts
+}
+
+export default connect(mapStateToProps, mapDispatchToProps) (withStyles(styles)(FeedList));

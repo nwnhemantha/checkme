@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { Component }from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
+import { connect } from 'react-redux';
+import { fetchCategories } from '../../modules/category';
+
 
 const styles = theme => ({
   root: {
@@ -14,36 +17,62 @@ const styles = theme => ({
   },
 });
 
-function ListDividers(props) {
+
+class ListDividers extends Component {
+  constructor(props){
+      super(props);
+      this.state = {
+          categoryies: []
+      }
+  }
+
+  componentDidMount(){
+    this.props.fetchCategories();
+  }
+
+  componentWillReceiveProps(np){
+    this.setState({ categoryies:np.category.categories })
+  }
+
+  loadCategory = () =>{
+    if(this.state.categoryies){
+      return this.state.categoryies.map( cat => (
+        <ListItem button divider>
+          <ListItemText primary={cat.name} />
+        </ListItem>
+      ))
+    }
+  }
+
+  render() {
   
-  const { classes } = props;
-  return (
-    <List component="nav" className={classes.root}>
-     <Divider />
-      <ListItem button divider>
-        <ListItemText primary="Vehicles" />
-      </ListItem>
-      <ListItem button divider>
-        <ListItemText primary="Electronics" />
-      </ListItem>
-      <ListItem button divider>
-        <ListItemText primary="Beauty Culture" />
-      </ListItem>
-      <ListItem button divider>
-        <ListItemText primary="Sports" />
-      </ListItem>
+    const { classes } = this.props;
+
+
+    return (
+      <List component="nav" className={classes.root}>
+      <Divider />  
+        { this.loadCategory() }
       <Divider />
 
-      <div>
-        <br />
-        <div id="histats_counter"></div>
-      </div>
-    </List>
-  );
+        <div>
+          <br />
+          <div id="histats_counter"></div>
+        </div>
+      </List>
+      );
+  } 
 }
-
 ListDividers.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(ListDividers);
+const mapStateToProps = state => ({
+  ...state
+})
+
+const mapDispatchToProps = {
+  fetchCategories
+}
+
+export default connect(mapStateToProps, mapDispatchToProps) (withStyles(styles)(ListDividers));

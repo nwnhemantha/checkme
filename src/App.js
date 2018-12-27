@@ -7,7 +7,6 @@ import './App.scss';
 import Tags from './components/right-section/tags';
 import CategoryList from './components/left-section/category-list';
 import FeedList from './components/main-section/feedList';
-import Pagination from './components/main-section/pagination';
 import Button from '@material-ui/core/Button';
 import CreateIcon from '@material-ui/icons/Create';
 import {history} from './index';
@@ -51,7 +50,7 @@ render() {
             <CreateIcon /> Add New Review or Question
           </Button>
           <FeedList/>
-          <Pagination />
+         
           </Paper>
         </Grid>
         <Grid item xs>

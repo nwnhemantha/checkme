@@ -10,7 +10,12 @@ const styles = theme => ({
         marginLeft: theme.spacing.unit,
         marginRight: theme.spacing.unit,
         width: "75%",
-    }
+    },
+    title: {
+      marginLeft: theme.spacing.unit,
+      marginRight: theme.spacing.unit,
+      width: "75%",
+  }
 });
 
 
@@ -25,10 +30,23 @@ class PostInput extends Component {
     this.props.onStep2Change(event.target.value);
   }
 
+  onChangeTitle = event => {
+    this.props.onStep2ChangeTitle(event.target.value);
+  }
+
   render() {
     const { classes } = this.props;
     return (
-      <div className={classes.root}>
+        <div className={classes.root}>
+        <TextField
+          label="Title"
+          placeholder="Post title here"
+          className={classes.title}
+          margin="normal"
+          variant="outlined"
+          onChange={this.onChangeTitle}
+        />
+        <br/>
         <TextField
           id="textarea"
           label="Your review"

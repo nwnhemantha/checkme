@@ -67,13 +67,19 @@ class NewPostStep extends React.Component {
         break;
       
       case 1:
+      if((!post.title || post.title == "")) {
+        toast.error("Please fill the title");
+        return false
+      }
+
       if((!post.details || post.details == "")) {
-        toast.error("Please type details");
+        toast.error("Please fill the details");
         return false
       }
         break;
 
       case 2:
+      
       if((!post.tags || post.tags.length < 3)) {
         toast.error("You need to provide minimum 3 tags");
         return false
@@ -121,6 +127,10 @@ class NewPostStep extends React.Component {
     this.setState({post: { ...post ,"details": value}});
   }
   
+  onStep2ChangeTitle = value => {
+    const { post} = this.state;
+    this.setState({post: { ...post ,"title": value}});
+  }
   
   onStep3Change = value => {
     const { post} = this.state;
@@ -133,7 +143,7 @@ class NewPostStep extends React.Component {
       case 0:
         return <Step1 categories={this.state.categories} onStep1Change={this.onStep1Change}/>;
       case 1:
-        return <Step2 onStep2Change={this.onStep2Change}/>;
+        return <Step2 onStep2Change={this.onStep2Change} onStep2ChangeTitle={this.onStep2ChangeTitle}/>;
       case 2:
         return <Step3 onStep3Change={this.onStep3Change}/>;
       default:

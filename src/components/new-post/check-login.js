@@ -134,7 +134,7 @@ class CheckLogin extends Component {
 
         <div>
         <Typography className={classes.dividerInset} color="textSecondary"> 
-            <h3>OR</h3> continue as <b>user_{moment().unix()}</b> 
+            <h3>OR</h3> continue as <b>User_{moment().unix()}</b> 
         </Typography>
         <Button color="primary" onClick={this.next}>
             Continue >>>

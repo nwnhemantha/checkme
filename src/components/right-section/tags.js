@@ -5,6 +5,8 @@ import { withStyles } from '@material-ui/core/styles';
 import Chip from '@material-ui/core/Chip';
 import SearchIcon from '@material-ui/icons/Search';
 import '../index.scss';
+import { connect } from 'react-redux';
+import { fetchTags } from '../../modules/tags';
 
 const styles = theme => ({
   root: {
@@ -20,15 +22,25 @@ const styles = theme => ({
 
 class Chips extends React.Component {
   state = {
-    chipData: [
-      { key: 0, label: 'civic' },
-      { key: 1, label: 'fb14' },
-      { key: 2, label: 'honda' },
-      { key: 3, label: 'car' },
-      { key: 4, label: 'fuel' },
-    ],
+    chipData: [],
   };
 
+  componentDidMount(){
+    this.props.fetchTags();
+  }
+
+  componentWillReceiveProps(np){
+    const chipData = [];
+    if(np.tags.tags){ 
+      np.tags.tags.map( (value, key) => {
+        chipData.push({
+          key,
+          label: value.tag
+        });
+      });
+    }
+    this.setState({ chipData})
+  }
 
   render() {
     const { classes } = this.props;
@@ -59,4 +71,13 @@ Chips.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(Chips);
+
+const mapStateToProps = state => ({
+  ...state
+})
+
+const mapDispatchToProps = {
+  fetchTags
+}
+
+export default connect(mapStateToProps, mapDispatchToProps) (withStyles(styles)(Chips));
