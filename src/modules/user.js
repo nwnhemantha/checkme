@@ -1,3 +1,4 @@
+import {URI}  from './constants';
 
 const SIGNIN_SUCCESS = "SIGNIN_SUCCESS";
 const LOGOUT = "LOGOUT";
@@ -39,9 +40,7 @@ export default function auth(state = initialState, action = {}) {
 
 
 export const signIn = (data) => dispatch =>  {
-
-  console.log('=============',data)
-    fetch("http://localhost:3001/sign-in", {
+    fetch(URI+"sign-in", {
       method: "POST",
       headers: {
         'content-type': 'application/json'

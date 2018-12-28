@@ -1,3 +1,4 @@
+import {URI}  from './constants';
 
 const FETCH_ALL = "FETCH_ALL";
 const FETCH_FAILED = "FETCH_FAILED";
@@ -29,7 +30,7 @@ export default function category(state = initialState, action = {}) {
 
 
 export const fetchCategories = () => dispatch =>  {
-    fetch("http://localhost:3001/categories").then(function(response) {
+    fetch(URI+"categories").then(function(response) {
         return response.json()
       }).then( res => {
         return dispatch ({

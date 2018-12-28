@@ -2,8 +2,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Chip from '@material-ui/core/Chip';
-import SearchIcon from '@material-ui/icons/Search';
+import LocalOffer from '@material-ui/icons/LocalOffer';
 import '../index.scss';
 import { connect } from 'react-redux';
 import { fetchTags } from '../../modules/tags';
@@ -16,8 +15,17 @@ const styles = theme => ({
     padding: theme.spacing.unit / 2,
   },
   chip: {
-    margin: theme.spacing.unit / 2,
+    marginRight: "5px",
+    background: "aqua",
+    padding: "2px 10px",
+    borderRadius: "7px",
+    marginTop: "10px",
+    cursor: "pointer"
   },
+  icon: {
+    fontSize: "15px"
+  }
+
 });
 
 class Chips extends React.Component {
@@ -51,15 +59,7 @@ class Chips extends React.Component {
           let icon = null;
 
           return (
-            <Chip
-                key={data.key}
-                label={data.label}
-                className={classes.chip}
-                color="primary"
-                deleteIcon={<SearchIcon />}
-                onClick={() => null}
-                onDelete={() => null}
-            />
+            <a  className={classes.chip}>{data.label} <LocalOffer className={classes.icon}/></a>
           );
         })}
       </div>

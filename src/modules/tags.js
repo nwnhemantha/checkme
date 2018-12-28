@@ -1,3 +1,4 @@
+import {URI}  from './constants';
 
 const FETCH_TAGS = "FETCH_TAGS";
 const FETCH_TAG_FAILED = "FETCH_TAG_FAILED";
@@ -29,7 +30,7 @@ export default function tags(state = initialState, action = {}) {
 
 
 export const fetchTags = () => dispatch =>  {
-    fetch("http://localhost:3001/tags").then(function(response) {
+    fetch(URI+"tags").then(function(response) {
         return response.json()
       }).then( res => {
         return dispatch ({

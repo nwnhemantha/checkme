@@ -17,6 +17,7 @@ import { connect } from 'react-redux';
 import { fetchPostDetails } from '../../modules/post';
 import moment from 'moment';
 import TextareaAutosize from 'react-autosize-textarea';
+import LocalOffer from '@material-ui/icons/LocalOffer';
 
 const styles = theme => ({
   root: {
@@ -24,7 +25,7 @@ const styles = theme => ({
     backgroundColor: theme.palette.background.paper,
   },
   button: {
-    marginLeft: "-85%",
+    marginLeft: "-40%",
     backgroundColor: '#0cd2d4'
   },
   inline: {
@@ -37,7 +38,20 @@ const styles = theme => ({
   details: {
     width: "100%",
     border: "none",
-    paddingTop: "15px"
+    paddingTop: "15px",
+    fontFamily: "'Roboto', 'Helvetica', 'Arial', sans-serif",
+    fontSize: "15px"
+  },
+  tags: {
+    cursor: "pointer",
+    float: "right",
+    background: "aqua",
+    padding: "2px 10px",
+    borderRadius: "7px",
+    marginRight: "10px",
+  },
+  icon: {
+    fontSize: "15px"
   }
 });
 
@@ -66,7 +80,6 @@ class detailsView extends React.Component {
     const { classes } = this.props;
     const { post } = this.state;
 
-    console.log(post);
 
     if(!post) {
       return (
@@ -85,12 +98,18 @@ class detailsView extends React.Component {
       user = `User_${ moment(post.created_at).unix() }`
     }
 
-
+console.log(post)
     return (
       <div>
       <Button variant="contained" color="primary" size="small" onClick={this.goBack} className={classes.button}>
           <CreateIcon /> go back
       </Button>
+      
+      {
+          post.PostTags.map( (tag) => (
+            <a className={classes.tags}>{tag.tag} <LocalOffer className={classes.icon}/></a>
+          ))
+      }
       <List className={classes.root}>
         <ListItem alignItems="flex-start">
           <ListItemAvatar>

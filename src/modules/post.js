@@ -1,3 +1,4 @@
+import {URI}  from './constants';
 
 const NEW_POST = "NEW_POST";
 const NEW_POST_ERROR = "NEW_POST_ERROR";
@@ -63,7 +64,7 @@ export default function category(state = initialState, action = {}) {
 
 
 export const createPost = (data) => dispatch =>  {
-    fetch("http://localhost:3001/post", {
+    fetch(URI+"post", {
       method: "POST",
       headers: {
         'content-type': 'application/json'
@@ -86,7 +87,7 @@ export const createPost = (data) => dispatch =>  {
 
 
 export const fetchPosts = (limit = 4, offset = 0) => dispatch =>  {
-  fetch("http://localhost:3001/posts/all/"+limit+"/"+offset).then(function(response) {
+  fetch(URI+"posts/all/"+limit+"/"+offset).then(function(response) {
       return response.json()
     }).then( res => {
       return dispatch ({
@@ -102,7 +103,7 @@ export const fetchPosts = (limit = 4, offset = 0) => dispatch =>  {
 }
 
 export const fetchPostDetails = (id) => dispatch =>  {
-  fetch("http://localhost:3001/post/"+id).then(function(response) {
+  fetch(URI+"post/"+id).then(function(response) {
       return response.json()
     }).then( res => {
       return dispatch ({
