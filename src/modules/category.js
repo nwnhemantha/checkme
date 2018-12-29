@@ -3,9 +3,10 @@ import {URI}  from './constants';
 const FETCH_ALL = "FETCH_ALL";
 const FETCH_FAILED = "FETCH_FAILED";
 const GET_CAT_ID = "GET_CAT_ID";
+const REMOVE_CAT_ID = "REMOVE_CAT_ID";
 
 const initialState = {
-  categoryId: 0
+  categoryId: null
 }
 
 export default function category(state = initialState, action = {}) {
@@ -31,6 +32,13 @@ export default function category(state = initialState, action = {}) {
       }
       break;
 
+    case REMOVE_CAT_ID:
+    return {
+        ...state,
+        categoryId: action.payload
+      }
+      break;
+  
     default: return state;
   }
 
@@ -58,6 +66,14 @@ export const selectCategory = (id) => dispatch =>  {
   return dispatch ({
     type: GET_CAT_ID,
     payload: id
+  })
+
+}
+
+export const unSelectCategory = () => dispatch =>  {
+  return dispatch ({
+    type: GET_CAT_ID,
+    payload: null
   })
 
 }

@@ -7,6 +7,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
 import { connect } from 'react-redux';
 import { fetchCategories, selectCategory } from '../../modules/category';
+import { unSelectTag } from '../../modules/tags';
 
 
 const styles = theme => ({
@@ -45,6 +46,7 @@ class ListDividers extends Component {
   }
 
   onChange = (id) => {
+    this.props.unSelectTag();
     this.props.selectCategory(id);
   }
   render() {
@@ -79,6 +81,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   fetchCategories,
+  unSelectTag,
   selectCategory
 }
 

@@ -9,7 +9,8 @@ import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
 import { history } from '../../index';
 import { connect } from 'react-redux';
-import { fetchPosts, fetchCategoryPosts } from '../../modules/post';
+import { fetchPosts, fetchCategoryPosts, fetchTagPosts } from '../../modules/post';
+
 import moment from 'moment';
 import Pagination from './pagination';
 
@@ -37,7 +38,8 @@ class FeedList extends React.Component {
       offset: 0,
       page: 0,
       rowsPerPage: 10,
-      categoryId: null
+      categoryId: null,
+      tag: null
     }
   }
   onClick = post => {
@@ -53,22 +55,23 @@ class FeedList extends React.Component {
 
   componentWillReceiveProps(np){
     // console.log('np', np);
-    const { limit, offset, categoryId} = this.state;
-    // console.log('this.state', this.state);
+    const { limit, offset, categoryId, tag} = this.state;
 
     if(np.category.categoryId) {
-
-      this.setState({categoryId: np.category.categoryId })
+      this.setState({categoryId: np.category.categoryId, tag: null })
       if ( categoryId == null || (np.category.categoryId != categoryId)) {
-  
           this.setState({ categoryId: np.category.categoryId })
           this.props.fetchCategoryPosts(np.category.categoryId, limit, offset);  
-       
-
-      }
-      
+      } 
     }
 
+    if(np.tags.tag) {
+      this.setState({tag: np.tags.tag, categoryId: null })
+      if ( tag == null || (np.tags.tag != tag)) {
+          this.setState({ tag: np.tags.tag })
+          this.props.fetchTagPosts(np.tags.tag, limit, offset);  
+      } 
+    }
 
 
 
@@ -91,16 +94,17 @@ class FeedList extends React.Component {
 
       return {page: prevState.page, offset: prevState.offset };
     }, () => {
-      console.log('categoryId', this.state.categoryId)
+
       if (this.state.categoryId) {
         this.props.fetchCategoryPosts(this.state.categoryId, limit, this.state.offset);
-      } else {
+      } else if(this.state.tag){
+        this.props.fetchTagPosts(this.state.tag, limit, this.state.offset);
+      }else {
         this.props.fetchPosts(limit, this.state.offset)
       }
       
     })
 
-    console.log(page, selected)
   }
 
   // onChangeRowsPerPage = () => {
@@ -143,13 +147,16 @@ class FeedList extends React.Component {
   }
 
   loadTitle = () => {
-    console.log('this.state.posts', this.state.posts)
     if(this.state.posts && this.state.posts.length > 0){
       let title = 'ALL Categories';
       if(this.state.categoryId) {
         title = this.state.posts[0].Category.name
       }
 
+      if(this.state.tag) {
+        console.log(this.state.posts)
+        title = this.state.posts[0].PostTags[0].tag
+      }
       return (
         <h3>{title}</h3>
       )
@@ -186,7 +193,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   fetchPosts,
-  fetchCategoryPosts
+  fetchCategoryPosts,
+  fetchTagPosts
 }
 
 export default connect(mapStateToProps, mapDispatchToProps) (withStyles(styles)(FeedList));

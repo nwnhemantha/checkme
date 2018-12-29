@@ -5,7 +5,8 @@ import { withStyles } from '@material-ui/core/styles';
 import LocalOffer from '@material-ui/icons/LocalOffer';
 import '../index.scss';
 import { connect } from 'react-redux';
-import { fetchTags } from '../../modules/tags';
+import { fetchTags, selectTag } from '../../modules/tags';
+import { unSelectCategory } from '../../modules/category';
 
 const styles = theme => ({
   root: {
@@ -38,6 +39,7 @@ class Chips extends React.Component {
   }
 
   componentWillReceiveProps(np){
+    
     const chipData = [];
     if(np.tags.tags){ 
       np.tags.tags.map( (value, key) => {
@@ -50,6 +52,13 @@ class Chips extends React.Component {
     this.setState({ chipData})
   }
 
+  
+
+  onChange = (tag) => {
+    this.props.unSelectCategory();
+    this.props.selectTag(tag);
+  }
+
   render() {
     const { classes } = this.props;
 
@@ -59,7 +68,7 @@ class Chips extends React.Component {
           let icon = null;
 
           return (
-            <a  className={classes.chip}>{data.label} <LocalOffer className={classes.icon}/></a>
+            <a onClick={this.onChange.bind(this,data.label)}  className={classes.chip}>{data.label} <LocalOffer className={classes.icon}/></a>
           );
         })}
       </div>
@@ -77,7 +86,9 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = {
-  fetchTags
+  fetchTags,
+  selectTag,
+  unSelectCategory
 }
 
 export default connect(mapStateToProps, mapDispatchToProps) (withStyles(styles)(Chips));

@@ -120,6 +120,25 @@ export const fetchCategoryPosts = (id, limit = 10, offset = 0) => dispatch =>  {
 
 }
 
+
+
+export const fetchTagPosts = (tag, limit = 10, offset = 0) => dispatch =>  {
+  fetch(URI+"posts/tag/"+tag+"/"+limit+"/"+offset).then(function(response) {
+      return response.json()
+    }).then( res => {
+      return dispatch ({
+      type: POSTS_FETCH,
+      payload: res.data
+    })
+  }).catch( error => {
+    return dispatch ({
+      type: POSTS_FETCH_FAILED
+    })
+  })
+
+}
+
+
 export const fetchPostDetails = (id) => dispatch =>  {
   fetch(URI+"post/"+id).then(function(response) {
       return response.json()
