@@ -6,6 +6,8 @@ const POSTS_FETCH = "POSTS_FETCH";
 const POSTS_FETCH_FAILED = "POSTS_FETCH_FAILED";
 const POST_FETCH = "POST_FETCH";
 const POST_FETCH_FAILED = "POST_FETCH_FAILED";
+// const POSTS_CATEGORY_FETCH = "POSTS_CATEGORY_FETCH";
+// const POSTS_CATEGORY_FETCH_FAILED = "POSTS_CATEGORY_FETCH_FAILED";
 
 
 const initialState = {
@@ -86,8 +88,24 @@ export const createPost = (data) => dispatch =>  {
 }
 
 
-export const fetchPosts = (limit = 4, offset = 0) => dispatch =>  {
+export const fetchPosts = (limit = 10, offset = 0) => dispatch =>  {
   fetch(URI+"posts/all/"+limit+"/"+offset).then(function(response) {
+      return response.json()
+    }).then( res => {
+      return dispatch ({
+      type: POSTS_FETCH,
+      payload: res.data
+    })
+  }).catch( error => {
+    return dispatch ({
+      type: POSTS_FETCH_FAILED
+    })
+  })
+
+}
+
+export const fetchCategoryPosts = (id, limit = 10, offset = 0) => dispatch =>  {
+  fetch(URI+"posts/category/"+id+"/"+limit+"/"+offset).then(function(response) {
       return response.json()
     }).then( res => {
       return dispatch ({

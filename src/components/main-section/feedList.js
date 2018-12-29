@@ -9,7 +9,7 @@ import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
 import { history } from '../../index';
 import { connect } from 'react-redux';
-import { fetchPosts } from '../../modules/post';
+import { fetchPosts, fetchCategoryPosts } from '../../modules/post';
 import moment from 'moment';
 import Pagination from './pagination';
 
@@ -36,7 +36,8 @@ class FeedList extends React.Component {
       limit: 10,
       offset: 0,
       page: 0,
-      rowsPerPage: 10
+      rowsPerPage: 10,
+      categoryId: null
     }
   }
   onClick = post => {
@@ -51,7 +52,26 @@ class FeedList extends React.Component {
   }
 
   componentWillReceiveProps(np){
-    
+    // console.log('np', np);
+    const { limit, offset, categoryId} = this.state;
+    // console.log('this.state', this.state);
+
+    if(np.category.categoryId) {
+
+      this.setState({categoryId: np.category.categoryId })
+      if ( categoryId == null || (np.category.categoryId != categoryId)) {
+  
+          this.setState({ categoryId: np.category.categoryId })
+          this.props.fetchCategoryPosts(np.category.categoryId, limit, offset);  
+       
+
+      }
+      
+    }
+
+
+
+
     if(np.posts){
        this.setState({ posts: np.posts.posts.post, postCount: np.posts.posts.postCount})
     }
@@ -59,7 +79,7 @@ class FeedList extends React.Component {
   }
 
   onChangePage = (e, selected) => {
-    const { limit, offset, page} = this.state;
+    const { limit, offset, page, categoryId} = this.state;
     this.setState((prevState, props) => {
       if(page < selected){
         ++prevState.page;
@@ -70,14 +90,22 @@ class FeedList extends React.Component {
       }
 
       return {page: prevState.page, offset: prevState.offset };
-    }, () => this.props.fetchPosts(limit, this.state.offset))
+    }, () => {
+      console.log('categoryId', this.state.categoryId)
+      if (this.state.categoryId) {
+        this.props.fetchCategoryPosts(this.state.categoryId, limit, this.state.offset);
+      } else {
+        this.props.fetchPosts(limit, this.state.offset)
+      }
+      
+    })
 
     console.log(page, selected)
   }
 
-  onChangeRowsPerPage = () => {
-    console.log('onChangeRowsPerPage')
-  }
+  // onChangeRowsPerPage = () => {
+  //   console.log('onChangeRowsPerPage')
+  // }
 
   loadPosts = () => {
     const { classes } = this.props;
@@ -100,7 +128,7 @@ class FeedList extends React.Component {
           <ListItemText
             primary={item.title}
             secondary={
-              <React.Fragment classN>
+              <React.Fragment >
                 <Typography component="span" className={classes.inline} color="textPrimary">
                 { user } -  <span className={classes.duration}> { moment.duration(-moment().diff(moment(item.created_at), 'minutes'), "minutes").humanize(true) } </span>
                 </Typography>
@@ -114,6 +142,20 @@ class FeedList extends React.Component {
     }
   }
 
+  loadTitle = () => {
+    console.log('this.state.posts', this.state.posts)
+    if(this.state.posts && this.state.posts.length > 0){
+      let title = 'ALL Categories';
+      if(this.state.categoryId) {
+        title = this.state.posts[0].Category.name
+      }
+
+      return (
+        <h3>{title}</h3>
+      )
+    }
+  }
+
   render() {
 
     const { classes } = this.props;
@@ -121,6 +163,7 @@ class FeedList extends React.Component {
 
     return (
       <List className={classes.root}>
+        { this.loadTitle() }
         { this.loadPosts() }
         <Pagination 
           count={postCount}
@@ -142,7 +185,8 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = {
-  fetchPosts
+  fetchPosts,
+  fetchCategoryPosts
 }
 
 export default connect(mapStateToProps, mapDispatchToProps) (withStyles(styles)(FeedList));

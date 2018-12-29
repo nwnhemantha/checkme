@@ -6,7 +6,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
 import { connect } from 'react-redux';
-import { fetchCategories } from '../../modules/category';
+import { fetchCategories, selectCategory } from '../../modules/category';
 
 
 const styles = theme => ({
@@ -37,13 +37,16 @@ class ListDividers extends Component {
   loadCategory = () =>{
     if(this.state.categoryies){
       return this.state.categoryies.map( cat => (
-        <ListItem button divider>
+        <ListItem button divider onClick={this.onChange.bind(this,cat.id)}>
           <ListItemText primary={cat.name} />
         </ListItem>
       ))
     }
   }
 
+  onChange = (id) => {
+    this.props.selectCategory(id);
+  }
   render() {
   
     const { classes } = this.props;
@@ -52,6 +55,9 @@ class ListDividers extends Component {
     return (
       <List component="nav" className={classes.root}>
       <Divider />  
+      {/* <ListItem button divider onClick={this.onChange.bind(this,0)}>
+          <ListItemText primary="All" />
+        </ListItem> */}
         { this.loadCategory() }
       <Divider />
 
@@ -72,7 +78,8 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = {
-  fetchCategories
+  fetchCategories,
+  selectCategory
 }
 
 export default connect(mapStateToProps, mapDispatchToProps) (withStyles(styles)(ListDividers));
