@@ -35,11 +35,15 @@ class Comments extends React.Component {
     this.setState({ comments: this.props.comments})
   }
   
+  componentWillReceiveProps(np){
+    this.setState({comments: np.comments});
+  }
+
+
   loadComments = () => {
     const {comments} = this.state;
     const { classes } = this.props;
     
-    console.log('comments', comments)
     if (comments) {
       return comments.map( (comment) => {
         let user = null;

@@ -6,8 +6,8 @@ const POSTS_FETCH = "POSTS_FETCH";
 const POSTS_FETCH_FAILED = "POSTS_FETCH_FAILED";
 const POST_FETCH = "POST_FETCH";
 const POST_FETCH_FAILED = "POST_FETCH_FAILED";
-// const POSTS_CATEGORY_FETCH = "POSTS_CATEGORY_FETCH";
-// const POSTS_CATEGORY_FETCH_FAILED = "POSTS_CATEGORY_FETCH_FAILED";
+const CREATE_COMMENT = "CREATE_COMMENT";
+const CREATE_COMMENT_FAILED = "CREATE_COMMENT_FAILED";
 
 
 const initialState = {
@@ -23,13 +23,27 @@ export default function category(state = initialState, action = {}) {
     }
     break;
     
-    case NEW_POST:
+    case NEW_POST_ERROR:
     return {
         ...state,
         newPost: []
       }
       break;
-     
+    
+      case CREATE_COMMENT:
+      return {
+          ...state,
+          newComment: action.payload
+      }
+      break;
+      
+      case CREATE_COMMENT_FAILED:
+      return {
+          ...state,
+          newComment: null
+        }
+        break;
+
       case POSTS_FETCH:
       return {
           ...state,
@@ -87,6 +101,27 @@ export const createPost = (data) => dispatch =>  {
   })
 }
 
+export const createComment = (data) => dispatch =>  {
+  fetch(URI+"comment", {
+    method: "POST",
+    headers: {
+      'content-type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  }).then(function(response) {
+    return response.json()
+  }).then( res => {
+    return dispatch ({
+      type: CREATE_COMMENT,
+      payload: res.data 
+    })
+  }).catch( error => {
+    return dispatch ({
+      type: CREATE_COMMENT_FAILED,
+      payload: error  
+    })
+})
+}
 
 export const fetchPosts = (limit = 10, offset = 0) => dispatch =>  {
   fetch(URI+"posts/all/"+limit+"/"+offset).then(function(response) {

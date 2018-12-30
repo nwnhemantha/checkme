@@ -80,14 +80,15 @@ class NewPostStep extends React.Component {
 
       case 2:
       
-      if((!post.tags || post.tags.length < 3)) {
-        toast.error("You need to provide minimum 3 tags");
+      if((!post.tags || post.tags.length > 3)) {
+        toast.error("You need to provide upto 3 tags");
         return false
       }
       const data = {
         postData: post
       }
-      this.props.createPost(data)
+      this.props.createPost(data);
+      toast.success("You post has been published");
         break;
 
       default:
