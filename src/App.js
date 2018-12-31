@@ -19,6 +19,9 @@ const styles = theme => ({
     marginLeft: '60%;',
     backgroundColor: '#0cd2d4'
   },
+  buttonMobile: {
+    backgroundColor: '#0cd2d4'
+  },
   paper: {
     padding: theme.spacing.unit * 0.5,
     textAlign: 'center',
@@ -35,6 +38,8 @@ class App extends React.Component {
 render() {
 
   const { classes } = this.props;
+  const isMobile = window.innerWidth < 720;
+  const xs = isMobile? 9: 7;
 
   return (
     <div className={classes.root} id="App">
@@ -44,9 +49,9 @@ render() {
           <CategoryList />
           </Paper>
         </Grid>
-        <Grid item xs={7}>
+        <Grid item xs={ xs }>
           <Paper className={classes.paper}>
-          <Button variant="contained" color="primary" onClick={this.newPost} className={classes.button}>
+          <Button variant="contained" color="primary" onClick={this.newPost} className={isMobile? classes.buttonMobile :classes.button}>
             <CreateIcon /> Add New Review or Question
           </Button>
           <FeedList/>

@@ -172,27 +172,15 @@ class Header extends React.Component {
         open={isMobileMenuOpen}
         onClose={this.handleMobileMenuClose}
       >
-        <MenuItem>
-          <IconButton color="inherit">
-            <Badge badgeContent={4} color="secondary">
-              <MailIcon />
-            </Badge>
-          </IconButton>
-          <p>Messages</p>
-        </MenuItem>
-        <MenuItem>
-          <IconButton color="inherit">
-            <Badge badgeContent={11} color="secondary">
-              <NotificationsIcon />
-            </Badge>
-          </IconButton>
-          <p>Notifications</p>
-        </MenuItem>
         <MenuItem onClick={this.handleProfileMenuOpen}>
           <IconButton color="inherit">
-            <AccountCircle />
+          {
+            !this.state.isLogged && <AccountCircle />
+          }
+          {  this.state.isLogged &&
+            <Avatar alt="Remy Sharp" src={this.state.avatar} />
+          }
           </IconButton>
-          <p>Profile</p>
         </MenuItem>
       </Menu>
     );

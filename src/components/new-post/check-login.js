@@ -108,10 +108,10 @@ class CheckLogin extends Component {
                 <Step />
             )
         }
-
+    const isMobile = window.innerWidth < 720;
 
     return (
-      <div style={{marginTop: '80px', marginLeft: '80px'}}>
+      <div style={{marginTop: '80px', marginLeft: isMobile? '-120px': '80px' }}>
       <Paper className={classes.root} elevation={1}>
       <FacebookLogin
             appId="208836120062087"
