@@ -25,6 +25,11 @@ const styles = theme => ({
   },
   duration: {
     color: "#0067bc"
+  },
+  commentCount: {
+    position: "absolute",
+    right: "15px",
+    color: "darkblue"
   }
 });
 
@@ -140,6 +145,7 @@ class FeedList extends React.Component {
               </React.Fragment>
             }
           />
+          {item.Comments.length > 0 && <div className={classes.commentCount}>{item.Comments.length} Comments</div>}
         </ListItem>
         )
       })
