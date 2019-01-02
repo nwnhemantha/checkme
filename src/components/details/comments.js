@@ -20,6 +20,10 @@ const styles = theme => ({
   },
   duration: {
     color: "#0067bc"
+  },
+  comment: {
+    fontFamily: 'inherit',
+    whiteSpace: "pre-wrap"
   }
 });
 
@@ -66,7 +70,7 @@ class Comments extends React.Component {
                   <Typography component="span" className={classes.inline} color="textPrimary">
                   { user } -  <span className={classes.duration}> { moment.duration(-moment().diff(moment(comment.created_at), 'minutes'), "minutes").humanize(true) } </span>
                   </Typography>
-                  <div>{` ${comment.comment}`} </div>
+                  <pre className={classes.comment}>{` ${comment.comment}`} </pre>
                 </React.Fragment>
               }
             />
