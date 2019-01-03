@@ -48,8 +48,7 @@ class FeedList extends React.Component {
     }
   }
   onClick = post => {
-    console.log(post)
-    history.push(`/details/${post.id}/${post.title}`);
+    window.location.replace(`/details/${post.id}/${post.title}`);
   }
 
   componentDidMount(){

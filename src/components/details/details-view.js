@@ -121,7 +121,7 @@ class detailsView extends React.Component {
   }
 
   goBack = valuse => {
-    history.push('/')
+    window.location.replace('/')
   }
 
 

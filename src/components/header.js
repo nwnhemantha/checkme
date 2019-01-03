@@ -136,14 +136,15 @@ class Header extends React.Component {
   };
 
   redirecHome(){
-    history.push('/');
+    window.location.replace('/')
   }
 
   logout = () => {
     localStorage.removeItem('loggedUser');
     this.setState({anchorEl: null});
     this.props.logout();
-    history.push('/');
+    window.location.replace('/')
+    
   }
 
   render() {

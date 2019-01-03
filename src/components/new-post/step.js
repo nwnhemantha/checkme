@@ -108,7 +108,7 @@ class NewPostStep extends React.Component {
   };
 
   handleReset = () => {
-    history.push('/')
+    window.location.replace('/')
   };
   
   onStep1Change = value => {

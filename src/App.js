@@ -32,7 +32,7 @@ const styles = theme => ({
 class App extends React.Component {
 
   newPost = value => {
-    history.push('new-post');
+    window.location.replace('new-post');
   }
 
 render() {

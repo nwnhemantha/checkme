@@ -98,7 +98,7 @@ class CheckLogin extends Component {
     }
 
     goPrivacyPage = () => {
-        history.push('privacy')
+        window.location.replace('privacy');
     }
 
     render() {
