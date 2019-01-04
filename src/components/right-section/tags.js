@@ -39,7 +39,6 @@ class Chips extends React.Component {
   }
 
   componentWillReceiveProps(np){
-    
     const chipData = [];
     if(np.tags.tags){ 
       np.tags.tags.map( (value, key) => {
@@ -52,8 +51,6 @@ class Chips extends React.Component {
     this.setState({ chipData})
   }
 
-  
-
   onChange = (tag) => {
     this.props.unSelectCategory();
     this.props.selectTag(tag);
@@ -64,6 +61,7 @@ class Chips extends React.Component {
 
     return (
       <div className={classes.root} id="Chips">
+      
         {this.state.chipData.map(data => {
           let icon = null;
 

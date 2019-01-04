@@ -57,8 +57,23 @@ class CheckLogin extends Component {
         if(user) {
             this.setState({ isLogged: true})
         }
-        
+        this.loadAd1(); 
+        this.loadAd2(); 
     }
+
+    loadAd1(){
+        if (window.CHITIKA === undefined) { window.CHITIKA = { 'units' : [] }; };
+        var unit = {"calltype":"async[2]","publisher":"checkme","width":320,"height":50,"sid":"Chitika Default"};
+        var placement_id = window.CHITIKA.units.length;
+        window.CHITIKA.units.push(unit);
+    }
+
+    loadAd2(){
+        if (window.CHITIKA === undefined) { window.CHITIKA = { 'units' : [] }; };
+        var unit = {"calltype":"async[2]","publisher":"checkme","width":728,"height":90,"sid":"Chitika Default"};
+        var placement_id = window.CHITIKA.units.length;
+        window.CHITIKA.units.push(unit);
+    } 
 
     componentWillReceiveProps(np){
 
@@ -113,6 +128,7 @@ class CheckLogin extends Component {
     return (
       <div style={{marginTop: '80px', marginLeft: isMobile? '-120px': '80px' }}>
       <Paper className={classes.root} elevation={1}>
+      <div id={`chitikaAdBlock-0`}></div>
       <FacebookLogin
             appId="208836120062087"
             fields="name,email,picture"
@@ -142,6 +158,7 @@ class CheckLogin extends Component {
         </div>
       </Paper>
 
+      <div id={`chitikaAdBlock-1`} style={{ marginTop: "20px", marginLeft: "20%"}}></div>
         
         </div>
 
